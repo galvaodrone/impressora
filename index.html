@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Etiquetas - Galvão Drones</title>
-    <!-- Tailwind CSS para estilização moderna -->
+    <!-- Tailwind CSS para estilização moderna e limpa -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons para interface amigável -->
+    <!-- Lucide Icons para interface técnica amigável -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Cores oficiais da Galvão Drones */
+        /* Paleta de Cores Oficial da Galvão Drones */
         :root {
             --gd-orange: #EF7E13;
             --gd-green: #0E5847;
             --gd-green-light: #167d65;
+            --sheet-bottom-offset: 0mm;
         }
 
         .bg-gd-orange { background-color: var(--gd-orange); }
@@ -26,47 +27,52 @@
         .border-gd-green { border-color: var(--gd-green); }
         .hover-bg-gd-green:hover { background-color: var(--gd-green-light); }
 
-        /* Configurações específicas para impressão física real */
+        /* Estilos de Impressão de Alta Precisão - Força o posicionamento no rodapé absoluto */
         @media print {
-            body {
-                background: white !important;
+            body, html {
                 margin: 0 !important;
                 padding: 0 !important;
+                background: white !important;
+                width: 100% !important;
+                height: 100% !important;
+                overflow: hidden !important;
             }
             .no-print {
                 display: none !important;
             }
             .print-area {
-                padding: 0 !important;
-                margin: 0 !important;
-                box-shadow: none !important;
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
                 width: 100% !important;
-                max-width: 100% !important;
+                height: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
                 background: white !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: flex-end !important; /* Força tudo para o final da folha impressa */
-            }
-            
-            /* Força a folha a assumir a altura física real para o navegador empurrar as etiquetas para o rodapé */
-            .printable-sheet {
                 box-shadow: none !important;
+            }
+            .printable-sheet {
+                position: absolute !important;
+                bottom: var(--sheet-bottom-offset, 0mm) !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
                 border: none !important;
+                box-shadow: none !important;
                 background: white !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 display: flex !important;
                 flex-direction: column !important;
-                justify-content: flex-end !important; /* Força as etiquetas na base */
-                page-break-inside: avoid;
-                page-break-after: avoid;
+                justify-content: flex-end !important; /* Força as etiquetas na margem inferior absoluta */
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                page-break-after: avoid !important;
             }
-
-            /* Esconde as bordas das etiquetas na impressão para ficar idêntico ao original limpo */
+            /* Ocultar bordas pontilhadas para a impressão sair 100% limpa */
             .label-card {
                 border: none !important;
+                box-shadow: none !important;
             }
-
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -76,30 +82,31 @@
         /* Estilo interativo das etiquetas na tela */
         .printable-sheet {
             background-color: white;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Alinhamento na base exigido */
+            justify-content: flex-end; /* Alinhamento na base exigido para simulação real */
             box-sizing: border-box;
+            position: relative;
         }
 
         .label-card {
             background-color: white;
-            border: 1px dashed #cbd5e1; /* Visual sutil de contorno na tela */
+            border: 1px dashed #cbd5e1; /* Margem visual apenas para tela */
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Conteúdo na base da etiqueta */
+            justify-content: space-between;
             box-sizing: border-box;
             position: relative;
         }
         
         .label-card:hover {
             border-color: var(--gd-orange);
-            background-color: #fffbeb;
+            background-color: #fef8f3;
         }
 
-        /* Indicador de edição rápida */
+        /* Indicador de edição intuitiva */
         .editable-item {
             outline: none;
             cursor: text;
@@ -127,12 +134,12 @@
                 </svg>
                 <div>
                     <h1 class="text-xl font-black tracking-wider">GALVÃO DRONES</h1>
-                    <p class="text-xs text-teal-300">Calibrador Técnico de Margem e Impressão de Etiquetas</p>
+                    <p class="text-xs text-teal-300">Calibrador Técnico de Margem Inferior Absoluta</p>
                 </div>
             </div>
             <div class="flex flex-wrap gap-2 text-sm text-gray-300">
                 <span class="bg-gd-green-light px-3 py-1 rounded-full border border-teal-700 text-xs font-mono">GOIÂNIA - GO</span>
-                <span class="bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800 text-xs font-mono">SUPORTE TÉCNICO DJI</span>
+                <span class="bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800 text-xs font-mono">LABORATÓRIO DJI</span>
             </div>
         </div>
     </header>
@@ -140,7 +147,7 @@
     <!-- Área de Conteúdo Principal -->
     <main class="flex-1 container mx-auto p-4 md:p-6 flex flex-col lg:flex-row gap-6">
         
-        <!-- PAINEL DE CONTROLE E DADOS (Ocultado na impressão) -->
+        <!-- PAINEL DE CONTROLE (Ocultado na impressão) -->
         <section class="w-full lg:w-2/5 space-y-6 no-print">
             
             <!-- Card de Dados de Entrada Rápida (Bulk / Lote) -->
@@ -148,15 +155,15 @@
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-2">
                         <i data-lucide="edit-3" class="text-gd-orange w-5 h-5"></i>
-                        <h2 class="text-lg font-bold text-gray-800">Preenchimento Geral</h2>
+                        <h2 class="text-lg font-bold text-gray-800">Dados das Etiquetas</h2>
                     </div>
                     <button onclick="resetTemplate()" class="text-xs font-semibold text-gray-500 hover:text-gd-orange transition flex items-center gap-1">
-                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Padrão
+                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Restaurar Originais
                     </button>
                 </div>
                 
                 <p class="text-xs text-gray-500 mb-4">
-                    Insira as informações abaixo para preencher todo o lote de uma vez só. Para personalizar individualmente, basta <strong>clicar e digitar diretamente no texto da etiqueta correspondente na folha à direita</strong>.
+                    Insira as informações base abaixo. Para personalizar de forma independente, basta <strong>clicar e digitar diretamente na etiqueta correspondente na folha à direita</strong>.
                 </p>
                 
                 <div class="space-y-4">
@@ -172,9 +179,9 @@
                         </div>
                     </div>
 
-                    <!-- Linha 2 (Nome da Empresa / Logo) -->
+                    <!-- Linha 2 (Logo / Nome da Empresa) -->
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Nome da Empresa (Base)</label>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Marca / Assinatura (Base)</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                                 <i data-lucide="award" class="w-4 h-4"></i>
@@ -184,11 +191,11 @@
                         </div>
                     </div>
 
-                    <!-- Opções de Lote -->
+                    <!-- Opção de Auto-Incremento -->
                     <div class="pt-2 border-t border-gray-100 flex flex-col gap-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs text-gray-600 font-medium flex items-center gap-1.5">
-                                <i data-lucide="arrow-up-1-2" class="w-4 h-4 text-slate-400"></i> Incrementar OS automaticamente?
+                                <i data-lucide="arrow-up-1-2" class="w-4 h-4 text-slate-400"></i> Incrementar OS em lote?
                             </span>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="auto-increment" onchange="regenerateLabels()" class="sr-only peer">
@@ -199,17 +206,17 @@
                 </div>
             </div>
 
-            <!-- Card de Configuração Fisiográfica e Impressora -->
+            <!-- Card de Calibração Física de Margens e Layout -->
             <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-gd-green">
                 <div class="flex items-center gap-2 mb-4">
                     <i data-lucide="sliders" class="text-gd-green w-5 h-5"></i>
-                    <h2 class="text-lg font-bold text-gray-800">Ajustes da Folha e Etiquetas</h2>
+                    <h2 class="text-lg font-bold text-gray-800">Calibração e Medidas</h2>
                 </div>
 
                 <div class="space-y-4">
                     <!-- Configurações do Papel/Folha Completa -->
                     <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
-                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">📐 Dimensões do Papel / Bobina</span>
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">📐 Dimensões do Papel de Entrada</span>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[11px] text-gray-500 mb-0.5">Largura da Folha (mm)</label>
@@ -222,12 +229,20 @@
                                     class="w-full px-2 py-1 border border-gray-300 rounded text-xs font-mono">
                             </div>
                         </div>
-                        <div class="text-[10px] text-slate-500">
-                            * O padrão é <strong>210x297mm (A4)</strong>. Ajuste de acordo com a sua folha de etiquetas ou tamanho da bobina.
-                        </div>
                     </div>
 
-                    <!-- Configurações Individuais das Etiquetas -->
+                    <!-- Ajuste Fino de Deslocamento do Sensor (Sangria de Borda Inferior) -->
+                    <div class="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold text-amber-800 uppercase tracking-wider block">📍 Ajuste Fino de Rodapé (Sensor)</span>
+                            <span id="bottom-margin-val" class="text-xs font-bold text-amber-600">0 mm</span>
+                        </div>
+                        <input type="range" id="page-bottom-margin" min="-15" max="30" value="0" step="1" oninput="updatePageMargin(this.value)"
+                            class="w-full accent-gd-orange cursor-pointer">
+                        <p class="text-[10px] text-amber-700 mt-1">Regule se as etiquetas ficarem muito altas ou muito baixas no rodapé da folha física impressa.</p>
+                    </div>
+
+                    <!-- Medidas das Etiquetas -->
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Número de Colunas -->
                         <div>
@@ -298,15 +313,15 @@
                     <span class="text-xs font-bold text-gray-600 uppercase tracking-wider">Visualização Real da Folha</span>
                 </div>
                 <div class="text-[11px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 flex items-center gap-1">
-                    <i data-lucide="sparkles" class="w-3 h-3"></i> Toque e edite qualquer texto diretamente!
+                    <i data-lucide="sparkles" class="w-3 h-3"></i> Toque e digite para editar!
                 </div>
             </div>
 
-            <!-- Folha Física Simulada (Sempre centralizada, e se expande na impressão) -->
+            <!-- Folha Física Simulada (Alinha e posiciona perfeitamente na borda inferior) -->
             <div class="print-area w-full max-w-2xl flex justify-center bg-gray-300 p-6 rounded-b-xl border border-t-0 border-gray-400 min-h-[600px] overflow-auto">
                 
                 <!-- Folha com dimensões controladas milimetricamente -->
-                <div id="printable-sheet" class="printable-sheet p-2 border border-slate-400" style="width: 210mm; height: 297mm;">
+                <div id="printable-sheet" class="printable-sheet p-2 border border-slate-400" style="width: 210mm; height: 297mm; --sheet-bottom-offset: 0mm;">
                     
                     <!-- Grid das Etiquetas empurrado para a borda inferior absoluta -->
                     <div id="labels-container" class="grid justify-center" style="grid-template-columns: repeat(4, auto); gap: 3px;">
@@ -341,11 +356,13 @@
         
         const sheetWidth = document.getElementById('sheet-width');
         const sheetHeight = document.getElementById('sheet-height');
+        const pageBottomMargin = document.getElementById('page-bottom-margin');
+        const bottomMarginVal = document.getElementById('bottom-margin-val');
         
         const labelsContainer = document.getElementById('labels-container');
         const printableSheet = document.getElementById('printable-sheet');
 
-        // Atualizar fisicamente o tamanho do canvas/folha simulada
+        // Atualizar tamanho do papel/bobina
         function updateSheetDimensions() {
             const w = parseInt(sheetWidth.value) || 210;
             const h = parseInt(sheetHeight.value) || 297;
@@ -354,7 +371,15 @@
             printableSheet.style.height = `${h}mm`;
         }
 
-        // Regenerar o lote de etiquetas com base nos dados iniciais
+        // Calibração de rodapé fina em milímetros
+        function updatePageMargin(val) {
+            bottomMarginVal.innerText = `${val} mm`;
+            // Aplica tanto na simulação de tela quanto na variável CSS de impressão
+            printableSheet.style.setProperty('--sheet-bottom-offset', `${val}mm`);
+            printableSheet.style.paddingBottom = val >= 0 ? `${val}mm` : '0mm';
+        }
+
+        // Gerador primário de lote
         function regenerateLabels() {
             const osText = inputOs.value;
             const empresaText = inputEmpresa.value;
@@ -363,7 +388,7 @@
 
             labelsData = [];
 
-            // Analisar e capturar padrão de número no final da OS para autoincremento
+            // Analisa padrão de número para autoincremento (Ex: OS 1858 -> OS 1859)
             let osNumber = null;
             let osPrefix = osText;
             const match = osText.match(/\d+$/);
@@ -387,7 +412,7 @@
             renderLabels();
         }
 
-        // Renderização HTML com flexbox forçado ao final de cada etiqueta
+        // Renderiza cada etiqueta de acordo com o design solicitado
         function renderLabels() {
             const cols = parseInt(colsCount.value) || 4;
             const gap = parseInt(tagGap.value) || 3;
@@ -398,27 +423,33 @@
 
             labelsData.forEach((labelData, index) => {
                 const label = document.createElement('div');
-                label.className = "label-card p-1 pb-1.5 text-center text-black";
+                label.className = "label-card p-1 pb-2 text-center text-black";
                 label.dataset.index = index;
 
-                // Renderização com estrutura idêntica ao design da foto enviada (OS no topo, logo estilizado "GALVÃO DRONES" na base)
+                // Renderização com estrutura idêntica ao design enviado pelo cliente:
+                // - OS 1858 (Grande e em Negrito)
+                // - Logotipo com o "X" estilizado (Hélice do drone) no centro de GALVÃO DRONES
                 label.innerHTML = `
-                    <div class="w-full flex flex-col justify-end">
-                        <!-- Identificação / OS (Topo) -->
+                    <div class="w-full flex flex-col justify-between h-full">
+                        <!-- Identificação Principal / OS (Topo) -->
                         <div contenteditable="true" 
-                             class="editable-item font-black uppercase tracking-tight leading-none text-black pb-1 mb-1"
+                             class="editable-item font-black uppercase tracking-normal leading-none text-black pt-1 mb-1"
                              oninput="syncIndividualEdit(${index}, 'os', this.innerText)"
-                             style="font-size: 1.15em">
+                             style="font-size: 1.25em;">
                             ${labelData.os}
                         </div>
                         
-                        <!-- Logotipo Estilizado de Alta Fidelidade (Base) -->
-                        <div class="flex flex-col items-center justify-center leading-none text-black">
-                            <div contenteditable="true" 
-                                 class="editable-item font-black tracking-wider leading-none uppercase truncate flex items-center justify-center gap-0.5"
-                                 oninput="syncIndividualEdit(${index}, 'empresa', this.innerText)"
-                                 style="font-size: 0.85em; font-family: 'Arial Black', sans-serif;">
-                                ${labelData.empresa}
+                        <!-- Logotipo Integrado e Estilizado de Alta Fidelidade (Identidade da Imagem 2) -->
+                        <div class="flex flex-col items-center justify-end leading-none mt-auto">
+                            <!-- GALVÃ[X] -->
+                            <div class="flex items-center justify-center font-black tracking-tight text-black uppercase" style="font-size: 0.9em; font-family: 'Arial Black', sans-serif;">
+                                <span contenteditable="true" class="editable-item" oninput="syncIndividualEdit(${index}, 'empresa', this.innerText)">GALVÃ</span>
+                                <!-- Hélice / Drone [X] no lugar da letra O -->
+                                <span class="mx-0.5 inline-block bg-black text-white rounded px-0.5 py-0.5 font-bold text-[8px] flex items-center justify-center w-3 h-3">X</span>
+                            </div>
+                            <!-- DRONES -->
+                            <div class="font-black text-center text-black uppercase tracking-[0.2em] pt-0.5" style="font-size: 0.65em; font-family: 'Arial', sans-serif;">
+                                DRONES
                             </div>
                         </div>
                     </div>
@@ -430,14 +461,14 @@
             updateDimensions();
         }
 
-        // Sincroniza edições de texto diretas feitas na tela para manter integridade
+        // Sincronização em tempo real das edições diretas na folha
         function syncIndividualEdit(index, field, value) {
             if (labelsData[index]) {
                 labelsData[index][field] = value.trim();
             }
         }
 
-        // Modifica as proporções físicas (Sem destruir o estado de foco da digitação)
+        // Aplica modificações físicas de tamanho sem quebrar o foco de escrita
         function updateDimensions() {
             const width = parseInt(tagWidth.value) || 45;
             const height = parseInt(tagHeight.value) || 25;
@@ -456,7 +487,7 @@
             });
         }
 
-        // Restaura as configurações ideais mostradas em seu exemplo de impressão
+        // Retorna aos valores originais calibrados do PDF
         function resetTemplate() {
             inputOs.value = "OS 1858";
             inputEmpresa.value = "GALVÃO DRONES";
@@ -471,14 +502,17 @@
             
             sheetWidth.value = 210;
             sheetHeight.value = 297;
+            pageBottomMargin.value = 0;
 
             updateSheetDimensions();
+            updatePageMargin(0);
             regenerateLabels();
         }
 
-        // Inicialização Primária
+        // Carregamento Inicial
         window.onload = function() {
             updateSheetDimensions();
+            updatePageMargin(0);
             regenerateLabels();
         };
     </script>
