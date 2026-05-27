@@ -53,6 +53,8 @@
             box-sizing: border-box;
             height: 25mm; 
             padding-top: 2mm;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .item {
@@ -116,6 +118,8 @@
                 display: flex !important;
                 flex-direction: column; /* Organiza sequencialmente até bater no limite inferior */
                 overflow: hidden;
+                page-break-after: avoid;
+                break-after: avoid;
             }
             .no-print {
                 display: none !important;
@@ -125,8 +129,11 @@
                 margin: 0 !important;
                 padding: 0 !important;
                 width: 150mm !important;
-                height: 297mm !important; /* Força a página a ocupar a dimensão exata */
+                height: 100% !important; /* Alterado de 297mm fixo para 100% para remover a folha em branco residual */
+                max-height: 297mm !important;
                 overflow: hidden !important;
+                page-break-after: avoid;
+                break-after: avoid;
             }
         }
     </style>
