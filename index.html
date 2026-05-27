@@ -52,11 +52,11 @@
                 box-sizing: border-box !important;
                 background: white !important;
             }
-            /* Grade de etiquetas sem bordas e perfeitamente distribuída */
+            /* Grade de etiquetas sem bordas e perfeitamente distribuída em 4 colunas horizontais */
             .labels-grid {
                 display: grid !important;
-                grid-template-columns: repeat(4, auto) !important; /* 4 colunas como no PDF */
-                justify-content: center !important;
+                grid-template-columns: repeat(4, 25mm) !important; /* Força exatamente 4 colunas de 25mm */
+                justify-content: space-between !important; /* Distribui as colunas na horizontal */
                 width: 100% !important;
                 margin-bottom: var(--print-bottom-margin, 5mm) !important; /* Distância calibrável do fim da folha */
                 padding: 0 var(--print-side-margin, 8mm) !important;
@@ -93,7 +93,8 @@
             transition: all 0.2s;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center;
+            align-items: center;
             text-align: center;
             box-sizing: border-box;
         }
@@ -106,6 +107,10 @@
         .editable-text {
             outline: none;
             cursor: text;
+            white-space: nowrap; /* Evita que o texto quebre linha */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
         .editable-text:focus {
             background-color: #fef3c7;
@@ -185,7 +190,7 @@
                         <span>Margem das Laterais</span>
                         <span id="side-margin-indicator" class="font-bold text-gd-green">8 mm</span>
                     </div>
-                    <input type="range" id="input-side-margin" min="0" max="30" value="8" oninput="adjustSideMargin(this.value)"
+                    <input type="range" id="input-side-margin" min="0" max="50" value="8" oninput="adjustSideMargin(this.value)"
                         class="w-full accent-gd-green cursor-pointer">
                 </div>
 
@@ -195,7 +200,7 @@
                         <span>Tamanho da Fonte (OS)</span>
                         <span id="font-size-indicator" class="font-bold text-gd-green">8 px</span>
                     </div>
-                    <input type="range" id="input-font-size" min="6" max="16" value="8" oninput="adjustFontSize(this.value)"
+                    <input type="range" id="input-font-size" min="6" max="14" value="8" oninput="adjustFontSize(this.value)"
                         class="w-full accent-gd-green cursor-pointer">
                 </div>
             </div>
@@ -226,35 +231,35 @@
                 <!-- Folha de Papel Física -->
                 <div id="preview-sheet" class="preview-sheet" style="width: 210mm; height: 297mm; padding-bottom: 5mm; padding-left: 8mm; padding-right: 8mm;">
                     
-                    <!-- Linha de etiquetas alinhada perfeitamente na base -->
-                    <div id="labels-container" class="labels-grid gap-4">
+                    <!-- Linha de etiquetas alinhada perfeitamente na base com grid horizontal rígido -->
+                    <div id="labels-container" class="labels-grid grid grid-cols-4 w-full gap-4 justify-between">
                         
                         <!-- Coluna 1 -->
-                        <div class="label-interactive-card p-1" style="width: 25mm; height: 15mm;">
+                        <div class="label-interactive-card p-0.5" style="width: 25mm; height: 15mm;">
                             <div contenteditable="true" class="editable-text font-black text-black uppercase leading-none pb-0.5" id="os-col-0" style="font-size: 8px;">OS 1858</div>
                             <div class="font-extrabold text-[5px] text-black leading-none py-0.5">X</div>
-                            <div class="font-black text-black leading-none" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
+                            <div class="font-black text-black leading-none truncate w-full" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
                         </div>
 
                         <!-- Coluna 2 -->
-                        <div class="label-interactive-card p-1" style="width: 25mm; height: 15mm;">
+                        <div class="label-interactive-card p-0.5" style="width: 25mm; height: 15mm;">
                             <div contenteditable="true" class="editable-text font-black text-black uppercase leading-none pb-0.5" id="os-col-1" style="font-size: 8px;">OS 1858</div>
                             <div class="font-extrabold text-[5px] text-black leading-none py-0.5">X</div>
-                            <div class="font-black text-black leading-none" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
+                            <div class="font-black text-black leading-none truncate w-full" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
                         </div>
 
                         <!-- Coluna 3 -->
-                        <div class="label-interactive-card p-1" style="width: 25mm; height: 15mm;">
+                        <div class="label-interactive-card p-0.5" style="width: 25mm; height: 15mm;">
                             <div contenteditable="true" class="editable-text font-black text-black uppercase leading-none pb-0.5" id="os-col-2" style="font-size: 8px;">OS 1858</div>
                             <div class="font-extrabold text-[5px] text-black leading-none py-0.5">X</div>
-                            <div class="font-black text-black leading-none" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
+                            <div class="font-black text-black leading-none truncate w-full" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
                         </div>
 
                         <!-- Coluna 4 -->
-                        <div class="label-interactive-card p-1" style="width: 25mm; height: 15mm;">
+                        <div class="label-interactive-card p-0.5" style="width: 25mm; height: 15mm;">
                             <div contenteditable="true" class="editable-text font-black text-black uppercase leading-none pb-0.5" id="os-col-3" style="font-size: 8px;">OS 1858</div>
                             <div class="font-extrabold text-[5px] text-black leading-none py-0.5">X</div>
-                            <div class="font-black text-black leading-none" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
+                            <div class="font-black text-black leading-none truncate w-full" style="font-size: 5px; font-family: 'Arial Black', sans-serif;">GALVÃO DRONES</div>
                         </div>
 
                     </div>
@@ -300,7 +305,7 @@
             sideMarginIndicator.innerText = `${value} mm`;
             previewSheet.style.paddingLeft = `${value}mm`;
             previewSheet.style.paddingRight = `${value}mm`;
-            document.documentElement.style.setProperty('--print-side-margin', `${value}mm`;
+            document.documentElement.style.setProperty('--print-side-margin', `${value}mm`);
         }
 
         // Ajusta o tamanho da fonte das ordens de serviço
