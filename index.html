@@ -17,7 +17,7 @@
             --cinza-claro: #f4f7f6;
         }
 
-        /* CONFIGURAÇÃO DE IMPRESSÃO - FORMATO DE ROLO/ETIQUETA ORIGINAL */
+        /* CONFIGURAÇÃO DE IMPRESSÃO - FORMATO DE ROLO/ETIQUETA ORIGINAL (150mm x 297mm) */
         @page {
             size: 150mm 297mm;
             margin: 0;
@@ -26,11 +26,15 @@
         /* Estilos específicos para visualização em tela */
         .preview-container {
             width: 150mm;
+            height: 297mm; /* Simula a altura exata de uma folha/ciclo do rolo */
             background: #ffffff;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             border: 1px dashed #cbd5e1;
             border-radius: 4px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Alinha o conteúdo na base/inferior do preview */
         }
 
         /* Área de Impressão Exata do Layout */
@@ -48,7 +52,7 @@
             justify-content: center;
             box-sizing: border-box;
             height: 25mm; 
-            padding-top: 2mm; /* Ajustado levemente para melhor distribuição vertical sem a logo */
+            padding-top: 2mm;
         }
 
         .item {
@@ -105,10 +109,13 @@
             #area-impressao {
                 position: absolute;
                 left: 0;
-                top: 0;
+                bottom: 0; /* ALINHA TOTALMENTE NA PARTE INFERIOR DA FOLHA */
                 width: 150mm;
+                height: auto;
+                max-height: 297mm;
                 display: flex !important;
-                flex-direction: column-reverse; /* Reverte para fluxo de baixo para cima conforme o original */
+                flex-direction: column; /* Organiza sequencialmente até bater no limite inferior */
+                overflow: hidden;
             }
             .no-print {
                 display: none !important;
@@ -118,8 +125,8 @@
                 margin: 0 !important;
                 padding: 0 !important;
                 width: 150mm !important;
-                height: auto !important;
-                overflow: visible !important;
+                height: 297mm !important; /* Força a página a ocupar a dimensão exata */
+                overflow: hidden !important;
             }
         }
     </style>
@@ -196,7 +203,7 @@
                             <button type="button" onclick="alterarCopias(-1)" class="p-3 bg-slate-100 rounded-lg hover:bg-slate-200 text-slate-700 transition">
                                 <i data-lucide="minus" class="w-5 h-5"></i>
                             </button>
-                            <input type="number" id="copias" value="3" min="1" max="50"
+                            <input type="number" id="copias" value="3" min="1" max="11"
                                 class="block w-full text-center py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF7E13] focus:border-[#EF7E13] font-bold text-lg">
                             <button type="button" onclick="alterarCopias(1)" class="p-3 bg-slate-100 rounded-lg hover:bg-slate-200 text-slate-700 transition">
                                 <i data-lucide="plus" class="w-5 h-5"></i>
@@ -235,7 +242,7 @@
                 <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside">
                     <li>Insira o papel de rolo com largura de <b>150mm</b>.</li>
                     <li>Nas preferências da impressora, ajuste o layout de página para o mesmo tamanho (150mm x 297mm).</li>
-                    <li>Deixe as margens como <b>"Nenhuma"</b> na tela de visualização do navegador para aproveitar o corte perfeito da fita.</li>
+                    <li>As etiquetas estão configuradas para imprimir **coladas no rodapé inferior** da folha.</li>
                 </ul>
             </div>
         </div>
@@ -244,17 +251,17 @@
         <div class="lg:col-span-7 flex flex-col items-center">
             <div class="w-full flex justify-between items-center mb-4">
                 <span class="text-sm font-semibold text-slate-500 uppercase tracking-widest flex items-center">
-                    <i data-lucide="eye" class="w-4 h-4 mr-1"></i> Pré-visualização Realista (Rolo de Etiquetas)
+                    <i data-lucide="eye" class="w-4 h-4 mr-1"></i> Pré-visualização na Base do Papel (150mm x 297mm)
                 </span>
                 <span id="badge-total" class="bg-[#0E5847] text-white text-xs font-bold px-3 py-1 rounded-full">
                     Total: 12 etiquetas
                 </span>
             </div>
 
-            <!-- Preview do Rolo Térmico -->
+            <!-- Preview do Rolo Térmico com Alinhamento Inferior -->
             <div class="w-full overflow-x-auto pb-4 flex justify-center bg-slate-200 p-6 rounded-2xl border border-slate-300">
                 <div class="preview-container">
-                    <div id="preview-render">
+                    <div id="preview-render" class="flex flex-col justify-end w-full">
                         <!-- Conteúdo injetado via JS -->
                     </div>
                 </div>
@@ -272,7 +279,7 @@
         </div>
     </footer>
 
-    <!-- AREA DE IMPRESSAO REAL -->
+    <!-- AREA DE IMPRESSAO REAL (Fica oculta na tela e alinhada na base no Print) -->
     <div id="area-impressao">
         <!-- Conteúdo injetado via JS para o momento do print -->
     </div>
@@ -346,7 +353,8 @@
         // Helpers de alteração das linhas/cópias
         function alterarCopias(valor) {
             let atual = parseInt(copiasInput.value) || 1;
-            atual = Math.max(1, Math.min(50, atual + valor));
+            // Limitado a 11 linhas para caber com segurança dentro de 297mm (uma página)
+            atual = Math.max(1, Math.min(11, atual + valor));
             copiasInput.value = atual;
             renderizarEtiquetas();
         }
